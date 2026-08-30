@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Repository Analyzer | Executive Code Audit &amp; Agentic Due Diligence</title>
+  <meta name="description" content="Multi-agent codebase auditing engine combining deterministic AST analysis, vulnerability scans, sandboxed runtime verification, and executive reporting.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Mermaid.js for Dynamic Architecture Diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  
+  <!-- Custom Styles (cache-busted) -->
+  <link rel="stylesheet" href="/static/css/style.css?v=15">
+</head>
+<body>
+
+<div class="app-wrapper">
+  <!-- SIDEBAR: AUDIT HISTORY LEDGER -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand">
+        <div class="brand-icon">🔬</div>
+        <div class="brand-text">
+          <h1>RepoAuditor.ai</h1>
+          <p>Agentic Workflows v2.0</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sidebar-content">
+      <div class="sidebar-title">Audit History Ledger</div>
+      <div id="historyList" class="history-list">
+        <div style="font-size: 12px; color: var(--text-dim); padding: 12px 4px;">Loading saved audits...</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEWPORT -->
+  <main class="main-content">
+    <!-- TOP NAVIGATION -->
+    <header class="top-navbar">
+      <div class="nav-status">
+        <span class="status-dot"></span>
+        <span>Multi-Agent Core: <strong>Online &amp; Verified</strong></span>
+      </div>
+      <div class="nav-actions">
+        <button id="btnExportMarkdown" class="btn btn-secondary" onclick="exportMarkdown()" disabled>
+          📥 Export Markdown
+        </button>
+        <button id="btnExportJSON" class="btn btn-secondary" onclick="exportJSON()" disabled>
+          💾 Export JSON
+        </button>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- AUDIT INITIATION CARD -->
+      <section class="input-hero">
+        <h2>Initiate Agentic Repository Due Diligence</h2>
+        <p>Evaluates architecture health, deterministic AST complexity, hardcoded vulnerabilities, runtime test assertions, and candidate requirement alignment.</p>
+        
+        <div class="form-group">
+          <label class="form-label" for="jdInput">
+            Target Job Description / Assessment Rubric <span>(Optional for benchmark matching)</span>
+          </label>
+          <textarea id="jdInput" class="form-textarea" placeholder="Paste job descriptions, technical requirements, or evaluation rubrics here (e.g., Senior Backend Engineer with Python, FastAPI, Docker, PostgreSQL)..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="repoUrlInput">
+            Public GitHub Repository Link *
+          </label>
+          <div class="input-row">
+            <input type="url" id="repoUrlInput" class="form-input" placeholder="https://github.com/psf/requests">
+            <button type="button" id="btnSubmitAudit" class="btn btn-primary" onclick="handleStartAudit(event)">
+              ▶ Run Multi-Agent Audit
+            </button>
+          </div>
+        </div>
+
+        <div class="quick-samples">
+          <span class="sample-label">Quick Benchmarks:</span>
+          <span class="sample-tag" onclick="loadSampleRepo('https://github.com/psf/requests', 'Core Python Library Developer with HTTP, urllib3, and Mock Testing')">Requests (HTTP Engine)</span>
+          <span class="sample-tag" onclick="loadSampleRepo('https://github.com/pallets/flask', 'Senior Python Engineer with Flask, Click, and Pytest')">Flask (Web Framework)</span>
+          <span class="sample-tag" onclick="loadSampleRepo('https://github.com/tiangolo/typer', 'CLI &amp; Python Architect with Typer, Click, and Type Annotations')">Typer (CLI Tools)</span>
+        </div>
+      </section>
+
+      <!-- LIVE STREAMING TERMINAL (Hidden by default) -->
+      <section id="terminalBox" class="terminal-box" style="display: none;">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="terminal-dot dot-red"></span>
+            <span class="terminal-dot dot-yellow"></span>
+            <span class="terminal-dot dot-green"></span>
+          </div>
+          <span class="terminal-title">Agent Execution Stream</span>
+          <span id="terminalStatus" style="font-size: 11px; color: var(--accent-primary);">PROCESSING</span>
+        </div>
+        <div id="terminalBody" class="terminal-body">
+          <!-- Live Stream Output -->
+        </div>
+      </section>
+
+      <!-- RESULTS CONTAINER (Hidden until audit completes or history loads) -->
+      <div id="resultsContainer" style="display: none;">
+        <!-- EXECUTIVE BANNER -->
+        <section class="executive-banner">
+          <div class="banner-left">
+            <div class="score-badge">
+              <div id="displayScore" class="score-num">--</div>
+              <div class="score-max">/100 SCORE</div>
+            </div>
+            <div class="banner-info">
+              <h2 id="displayRepoName">Repository Assessment Built</h2>
+              <p id="displayAuditSub">Multi-agent semantic proof verification completed successfully.</p>
+              <div class="badges-row">
+                <span id="badgeVerification" class="badge badge-success">🛡️ 100% Verified</span>
+                <span id="badgeRuntime" class="badge badge-info">⚡ Sandbox Tested</span>
+                <span id="badgeMaintainability" class="badge badge-warning">Maintainability: A</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- HIGH-LEVEL METRICS CARDS -->
+        <section class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-card-label">Structural Files</div>
+            <div id="metricTotalFiles" class="metric-card-value">0</div>
+            <div id="metricDensityTier" class="metric-card-sub">Standard Architecture</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-label">Cyclomatic Complexity</div>
+            <div id="metricAvgCC" class="metric-card-value">2.4</div>
+            <div class="metric-card-sub">AST Branch Density</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-label">Security Alerts</div>
+            <div id="metricSecurityAlerts" class="metric-card-value">0</div>
+            <div id="metricSecuritySub" class="metric-card-sub">Secrets &amp; Injections</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-label">Requirement Match</div>
+            <div id="metricJDMatch" class="metric-card-value">--</div>
+            <div id="metricJDSub" class="metric-card-sub">Skill Alignment</div>
+          </div>
+        </section>
+
+        <!-- TABS NAVIGATION -->
+        <nav class="tabs-nav">
+          <button class="tab-btn active" onclick="switchTab('tabExecutive', this)">📊 Executive Report &amp; Blueprint</button>
+          <button class="tab-btn" onclick="switchTab('tabSecurityAST', this)">🛡️ AST &amp; Security Deep Scan</button>
+          <button class="tab-btn" onclick="switchTab('tabRuntime', this)">⚡ Sandbox Runtime &amp; Review</button>
+          <button class="tab-btn" onclick="switchTab('tabVerification', this)">🔍 Anti-Hallucination &amp; Verification</button>
+          <button class="tab-btn" onclick="switchTab('tabLedgers', this)">📋 Sub-Agent Ledgers</button>
+        </nav>
+
+        <!-- TAB 1: EXECUTIVE AUDIT & MERMAID ARCHITECTURE -->
+        <div id="tabExecutive" class="tab-pane active">
+          <div class="card">
+            <div class="card-title">📐 Verified Architecture Blueprint (Mermaid.js)</div>
+            <div class="mermaid-wrapper">
+              <div id="mermaidTarget" class="mermaid">
+                graph TD
+                  Client[Client App] --> API[Backend API Engine]
+                  API --> DB[(Persistence Layer)]
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">📝 Executive Audit Report</div>
+            <div id="executiveReportContent" class="prose">
+              <!-- Rendered Markdown Executive Report -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: AST & SECURITY DEEP SCAN -->
+        <div id="tabSecurityAST" class="tab-pane">
+          <div class="card">
+            <div class="card-title">🚨 Line-by-Line Security Vulnerabilities &amp; Secret Leaks</div>
+            <div id="securityFindingsTableContainer">
+              <!-- Security table or clean badge -->
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">⚡ AST Cyclomatic Complexity &amp; Maintainability Index</div>
+            <div id="astFindingsContent" class="prose">
+              <!-- AST analysis summary -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: SANDBOX RUNTIME & ARCHITECT REVIEW -->
+        <div id="tabRuntime" class="tab-pane">
+          <div class="card">
+            <div class="card-title">⚙️ Sandbox Compilation &amp; Test Suite Execution</div>
+            <div id="runtimeDiagnosticsContent" class="prose">
+              <!-- Runtime compilation logs and pytest outputs -->
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">🧠 Principal Software Architect Assessment</div>
+            <div id="architectReviewContent" class="prose">
+              <!-- Architecture layout review -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: ANTI-HALLUCINATION & VERIFICATION -->
+        <div id="tabVerification" class="tab-pane">
+          <div class="card">
+            <div class="card-title">🛡️ Anti-Hallucination Evidence Verification Engine</div>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">
+              Every claim, file path, and code citation made by sub-agents is verified against the real local disk mirror before synthesis.
+            </p>
+            <div id="verificationContent">
+              <!-- Verification logs & table -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: SUB-AGENT LEDGERS -->
+        <div id="tabLedgers" class="tab-pane">
+          <div class="card">
+            <div class="card-title">🤖 Multi-Agent Execution Ledgers</div>
+            <div id="agentLedgersGrid" class="ledger-grid">
+              <!-- Individual cards per agent -->
+            </div>
+          </div>
+        </div>
+
+      </div> <!-- /resultsContainer -->
+    </div> <!-- /container -->
+  </main>
+</div>
+
+<!-- Custom Client Script (cache-busted) -->
+<script src="/static/js/app.js?v=15"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+# -----------------------------
+# Environment & Secrets
+# -----------------------------
+.env
+.env.local
+backend/.env
+*.env
+
+# -----------------------------
+# Audit History & Local Persistence
+# -----------------------------
+.analyzer_history.json
+memory.json
+*.json
+data/
+
+# -----------------------------
+# Temp Cloned Repos (runtime)
+# -----------------------------
+/tmp/repo_audit_*/
+repo_audit_*/
+
+# -----------------------------
+# Auto-generated Run Trajectories
+# -----------------------------
+trajectories/
+
+# -----------------------------
+# Python / Virtual Environments
+# -----------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+venv/
+.venv/
+env/
+.env/
+backend/venv/
+backend/.venv/
+ENV/
+
+# -----------------------------
+# Testing & IDEs
+# -----------------------------
+.pytest_cache/
+.coverage
+htmlcov/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# -----------------------------
+# OS Generated Files
+# -----------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
