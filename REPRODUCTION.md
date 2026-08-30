@@ -136,4 +136,3 @@ bottlepy/bottle              | 42.0%            | 92.5%          | 0.0% (Verifie
 ├── Dockerfile            # Container deployment
 ├── README.md             # Project documentation
 └── REPRODUCTION.md       # This reproduction guide
-```
