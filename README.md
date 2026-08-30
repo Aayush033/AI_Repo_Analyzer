@@ -2,10 +2,22 @@
 
 [![TrueForge Harness Compatible](https://img.shields.io/badge/TrueForge-Compatible-blueviolet?style=for-the-badge&logo=nvidia)](https://github.com/)
 [![Qodo Reviewed](https://img.shields.io/badge/Qodo-Agentic%20Reviewed-00C7B7?style=for-the-badge)](https://qodo.ai/)
+[![Video Demo](https://img.shields.io/badge/YouTube-Video%20Demo-FF0000?style=for-the-badge&logo=youtube)](https://youtu.be/-ufWCd9GBqc?si=b5Kjv1nipZroU7hh)
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
 
 An autonomous multi-agent code analysis and repository auditing platform compatible with the **TrueForge Agent Harness**. It inspects GitHub repositories for anti-patterns, cyclomatic complexity, security vulnerabilities, and sandboxed test execution with zero-hallucination citation verification loops.
+
+---
+
+## 🎥 Video Demo & Walkthrough
+📺 **[Click Here to Watch the Full Walkthrough Video on YouTube](https://youtu.be/-ufWCd9GBqc?si=b5Kjv1nipZroU7hh)**
+
+> **Walkthrough Summary:**
+> - **Architecture & Multi-Agent Engine**: Overview of AST complexity analysis, security vulnerability scanning, sandboxed test execution, and zero-hallucination verification.
+> - **TrueForge Agent Harness Integration**: Walkthrough of [`agent.json`](./agent.json) and MCP server integration.
+> - **Qodo Code Review Evidence**: Demonstration of our merged Pull Request #1 and all 4 surfaced edge cases resolved.
+> - **Live Interactive Dashboard**: Real-time WebSocket execution and Mermaid.js architecture blueprint generation.
 
 ---
 
