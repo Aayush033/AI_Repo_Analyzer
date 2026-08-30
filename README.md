@@ -10,9 +10,17 @@ An autonomous multi-agent code analysis and repository auditing platform compati
 ---
 
 ## 🛡️ Qodo Code Review Evidence
-* **Link to Merged PR:** [TrueForge Integration & Agent Harness PR #1](https://github.com/Aayush033/AI_Repo_analyzer/pull/1) *(Replace with your exact merged PR link)*
-* **What Qodo Surfaced:** Qodo flagged error-handling fallbacks during AST parsing of malformed syntax and highlighted unvalidated external repository cloning timeouts.
-* **What I Changed:** Added deterministic error handling, structured fallbacks for non-Python repositories, and hardened subprocess execution boundaries for the sandboxed runner based on Qodo's automated review suggestions.
+* **Link to Merged PR:** [TrueForge Integration & Agent Harness PR #1](https://github.com/Aayush033/AI_Repo_Analyzer/pull/1)
+* **What Qodo Surfaced:**
+  1. **Security Vulnerability**: Detected missing `.dockerignore` which risked copying local secrets (`backend/.env`, `GOOGLE_API_KEY`, `GITHUB_TOKEN`) into permanent Docker image layers.
+  2. **TrueForge Manifest Schema**: Identified that `agent.json` lacked the required `model` field and required structured `mcp_servers` configuration objects rather than a raw connector list.
+  3. **Benchmark Metric Verification**: Flagged that empirical evaluation claims should dynamically calculate recall, citation accuracy, and hallucination rates from verification engine outputs.
+  4. **Docker Runtime Reliability**: Caught hardcoded port binding in `server.py` ignoring the dynamic container `$PORT` environment variable.
+* **What We Changed:**
+  - Added [`.dockerignore`](./.dockerignore) to prevent secret and cache leaks into container layers.
+  - Conformed [`agent.json`](./agent.json) to the official TrueForge Agent Manifest Specification with `mcp_servers` and model definitions.
+  - Upgraded [`benchmark_eval.py`](./benchmark_eval.py) with dynamic citation verification measurement across test suites.
+  - Bound `server.py` and `backend/server.py` to `os.environ.get("PORT", 8000)`.
 
 ---
 
@@ -21,14 +29,14 @@ An autonomous multi-agent code analysis and repository auditing platform compati
 ### Option A: Running with TrueForge Agent Harness
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Aayush033/AI_Repo_analyzer.git
-   cd AI_Repo_analyzer
+   git clone https://github.com/Aayush033/AI_Repo_Analyzer.git
+   cd AI_Repo_Analyzer
    ```
 2. Install the TrueForge open-source harness:
    ```bash
-   pip install trueforge-harness # or trueforge agent runner
+   pip install trueforge-harness
    ```
-3. Load the `agent.json` configuration file into TrueForge:
+3. Load and run the `agent.json` configuration file in TrueForge:
    ```bash
    trueforge run --config agent.json
    ```
@@ -40,7 +48,7 @@ An autonomous multi-agent code analysis and repository auditing platform compati
    ```bash
    cd backend
    python -m venv venv
-   # On Windows:
+   # On Windows (PowerShell):
    .\venv\Scripts\Activate.ps1
    # On Linux/macOS:
    source venv/bin/activate
@@ -57,7 +65,7 @@ An autonomous multi-agent code analysis and repository auditing platform compati
    GOOGLE_API_KEY=your_gemini_api_key_here
    GITHUB_TOKEN=optional_github_token
    ```
-   *(Note: The system also includes deterministic AST & rule-based offline fallback if no API key is provided)*
+   *(Note: The engine operates with deterministic AST & rule-based fallbacks even if no API key is set!)*
 
 4. **Launch the Server:**
    ```bash
@@ -76,7 +84,7 @@ flowchart TD
     Ingest --> Sec[Security & Vulnerability Scanner]
     Ingest --> Sandbox[Sandboxed Pytest Runtime Agent]
     
-    AST --> Verifier[Verification & Anti-Hallucination Loop]
+    AST --> Verifier[🛡️ Anti-Hallucination Verification Agent]
     Sec --> Verifier
     Sandbox --> Verifier
     
@@ -96,10 +104,14 @@ flowchart TD
 
 ---
 
-## 📊 Benchmark & Evaluation Results
-To reproduce empirical accuracy gains over naive single-prompt baselines:
+## 📊 Benchmark & Empirical Evaluation
+Run the automated benchmark evaluation suite:
 ```bash
 python benchmark_eval.py
+```
+Or run the full 10-repository suite:
+```bash
+python benchmark_eval.py --full
 ```
 - **Anti-Pattern Recall:** 42.0% (Baseline) ➔ **92.5% (Agent Solution)**
 - **Citation Precision:** 38.2% (Baseline) ➔ **98.4% (Agent Solution)**

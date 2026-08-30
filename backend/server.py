@@ -244,8 +244,9 @@ async def websocket_audit_endpoint(websocket: WebSocket):
             pass
 
 if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
     print("\n" + "="*60)
     print("🚀 AI REPOSITORY ANALYZER - EXECUTIVE WEB SERVER LAUNCHED")
-    print("📍 Local UI Dashboard: http://localhost:8000")
+    print(f"📍 Local UI Dashboard: http://0.0.0.0:{port}")
     print("="*60 + "\n")
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=port)
