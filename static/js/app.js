@@ -1,8 +1,3 @@
-/* ============================================================
-   AI REPOSITORY ANALYZER - Frontend Controller v6
-   Dynamic Badges, Safe Mermaid Rendering, Multi-Tab Sync, History
-   ============================================================ */
-
 var currentAuditData = null;
 var auditHistory = [];
 var isAuditing = false;
