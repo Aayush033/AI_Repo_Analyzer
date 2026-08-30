@@ -247,6 +247,6 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     print("\n" + "="*60)
     print("🚀 AI REPOSITORY ANALYZER - EXECUTIVE WEB SERVER LAUNCHED")
-    print(f"📍 Local UI Dashboard: http://0.0.0.0:{port}")
+    print(f"📍 Local UI Dashboard: http://localhost:{port}")
     print("="*60 + "\n")
     uvicorn.run(app, host="0.0.0.0", port=port)
