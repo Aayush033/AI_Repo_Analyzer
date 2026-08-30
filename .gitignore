@@ -12,6 +12,7 @@ backend/.env
 .analyzer_history.json
 memory.json
 *.json
+!agent.json
 data/
 
 # -----------------------------
