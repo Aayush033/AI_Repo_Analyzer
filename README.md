@@ -1,154 +1,123 @@
-# 🔬 AI Repo Analyzer: Agentic Codebase Due Diligence & Audit Engine
+# AI Repo Analyzer - TrueForge Edition
 
-> **micro1 Agentic Workflows Hackathon Submission**  
-> *Category: Code Analysis & Technical Due Diligence ("Is this repository actually good?")*
+[![TrueForge Harness Compatible](https://img.shields.io/badge/TrueForge-Compatible-blueviolet?style=for-the-badge&logo=nvidia)](https://github.com/)
+[![Qodo Reviewed](https://img.shields.io/badge/Qodo-Agentic%20Reviewed-00C7B7?style=for-the-badge)](https://qodo.ai/)
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
 
----
-
-## 🎯 1. Target User & The Real-World Bottleneck
-
-### **Who has this problem?**
-- **Tech Leads & Senior Engineering Hiring Managers** reviewing technical assessment submissions from software engineer candidates.
-- **M&A Due Diligence Teams & Engineering Executives** vetting acquisition targets or external vendor codebases.
-
-### **What bottleneck makes it worth solving?**
-1. **Human Evaluation is Slow and Costly**: Thoroughly inspecting an unfamiliar repository—verifying modularity, computing cyclomatic complexity, hunting for hardcoded secret leaks, and validating test assertions—takes **45–60 minutes per repository**.
-2. **Naive LLM Dumps Fail**: Feeding a raw concatenated codebase into a single large-context LLM prompt results in **hallucinated line numbers (34.5% error rate)**, missed deeply-nested architectural anti-patterns, and vulnerability blindspots.
-
-### **The Solution**
-**RepoAuditor.ai** is a multi-agent auditing engine that combines **deterministic static tooling (AST & Radon complexity metrics, secret scanning)** with **sandboxed runtime test execution** and a dedicated **Anti-Hallucination Verification Loop**. It produces executive-grade audit deliverables with rendered **Mermaid.js architecture blueprints**, exact line citations (`auth.py:L45`), and actionable refactoring roadmaps.
+An autonomous multi-agent code analysis and repository auditing platform compatible with the **TrueForge Agent Harness**. It inspects GitHub repositories for anti-patterns, cyclomatic complexity, security vulnerabilities, and sandboxed test execution with zero-hallucination citation verification loops.
 
 ---
 
-## 🏛️ 2. Agentic Workflow Architecture
+## 🛡️ Qodo Code Review Evidence
+* **Link to Merged PR:** [TrueForge Integration & Agent Harness PR #1](https://github.com/Aayush033/AI_Repo_Analyzer/pull/1)
+* **What Qodo Surfaced:**
+  1. **Security Vulnerability**: Detected missing `.dockerignore` which risked copying local secrets (`backend/.env`, `GOOGLE_API_KEY`, `GITHUB_TOKEN`) into permanent Docker image layers.
+  2. **TrueForge Manifest Schema**: Identified that `agent.json` lacked the required `model` field and required structured `mcp_servers` configuration objects rather than a raw connector list.
+  3. **Benchmark Metric Verification**: Flagged that empirical evaluation claims should dynamically calculate recall, citation accuracy, and hallucination rates from verification engine outputs.
+  4. **Docker Runtime Reliability**: Caught hardcoded port binding in `server.py` ignoring the dynamic container `$PORT` environment variable.
+* **What We Changed:**
+  - Added [`.dockerignore`](./.dockerignore) to prevent secret and cache leaks into container layers.
+  - Conformed [`agent.json`](./agent.json) to the official TrueForge Agent Manifest Specification with `mcp_servers` and model definitions.
+  - Upgraded [`benchmark_eval.py`](./benchmark_eval.py) with dynamic citation verification measurement across test suites.
+  - Bound `server.py` and `backend/server.py` to `os.environ.get("PORT", 8000)`.
+
+---
+
+## ⚡ Setup Steps
+
+### Option A: Running with TrueForge Agent Harness
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Aayush033/AI_Repo_Analyzer.git
+   cd AI_Repo_Analyzer
+   ```
+2. Install the TrueForge open-source harness:
+   ```bash
+   pip install trueforge-harness
+   ```
+3. Load and run the `agent.json` configuration file in TrueForge:
+   ```bash
+   trueforge run --config agent.json
+   ```
+
+---
+
+### Option B: Running the Interactive Web Application & Multi-Agent Dashboard
+1. **Create and activate a virtual environment:**
+   ```bash
+   cd backend
+   python -m venv venv
+   # On Windows (PowerShell):
+   .\venv\Scripts\Activate.ps1
+   # On Linux/macOS:
+   source venv/bin/activate
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Configure Environment Variables:**
+   Create a `backend/.env` file:
+   ```env
+   GOOGLE_API_KEY=your_gemini_api_key_here
+   GITHUB_TOKEN=optional_github_token
+   ```
+   *(Note: The engine operates with deterministic AST & rule-based fallbacks even if no API key is set!)*
+
+4. **Launch the Server:**
+   ```bash
+   python server.py
+   ```
+   Open `http://localhost:8000` to view the live dashboard.
+
+---
+
+## 🧠 Multi-Agent Architecture
 
 ```mermaid
-graph TD
-    User([Target Repo URL + Job Spec]) --> Orch[Orchestrator & Task Scheduler]
+flowchart TD
+    User([User / TrueForge Harness]) --> Ingest[Repo Cloner & Ingestion]
+    Ingest --> AST[AST Complexity & Cyclomatic Agent]
+    Ingest --> Sec[Security & Vulnerability Scanner]
+    Ingest --> Sandbox[Sandboxed Pytest Runtime Agent]
     
-    subgraph "Deterministic Tools & Sandbox Execution"
-        Orch --> RepoAgent[Repo Explorer Agent]
-        Orch --> RuntimeAgent[Live Sandbox & Runtime Agent]
-        Orch --> ASTAgent[AST & Radon Complexity Agent]
-        Orch --> SecAgent[Security & Secret Vulnerability Agent]
-    end
+    AST --> Verifier[🛡️ Anti-Hallucination Verification Agent]
+    Sec --> Verifier
+    Sandbox --> Verifier
     
-    subgraph "Context & Behavioral Evaluation"
-        Orch --> JDAgent[Job & Rubric Matcher Agent]
-        Orch --> BehAgent[Behavioral & Git Hygiene Agent]
-        Orch --> AnalyticsAgent[Code Distribution Agent]
-    end
-    
-    subgraph "Verification & Synthesis"
-        RepoAgent & RuntimeAgent & ASTAgent & SecAgent & JDAgent --> Verifier[🛡️ Anti-Hallucination Verification Agent]
-        Verifier --> Synth[Executive Report Synthesizer Agent]
-    end
-    
-    Synth --> UI[Executive UI Dashboard & Export Report]
+    Verifier --> Summary[Summary & Executive Report Generator]
+    Summary --> UI[FastAPI Live WebSocket Dashboard & Mermaid Diagram]
 ```
+
+### Agent Roster
+| Agent | Responsibility |
+|---|---|
+| **Repo Cloner** | Safe shallow cloning & dependency tree analysis |
+| **AST Agent** | Radon cyclomatic complexity, maintainability index, and Halstead metrics |
+| **Security Agent** | Hardcoded secret detection, SQLi/RCE vulnerabilities, and unsafe imports |
+| **Runtime Sandbox** | Virtualized execution of test suites with pytest & coverage isolation |
+| **Verification Agent** | Strict validation of file paths and line number citations against AST nodes to prevent LLM hallucinations |
+| **Summary Agent** | Synthesizes metrics into structured executive markdown reports with Mermaid.js architecture diagrams |
 
 ---
 
-## 📊 3. Improvement Changelog
-
-We tracked our progression from a simple baseline to our final multi-agent system across a standardized 10-repository benchmark suite:
-
-| Stage | What We Tried & Why | Evidence (Primary Metrics) | Decision / Learning |
-| :--- | :--- | :--- | :--- |
-| **Baseline** | Single-turn Gemini prompt with concatenated codebase context. | • **Anti-Pattern Recall**: 42.0%<br>• **Citation Precision**: 38.2%<br>• **Hallucination Rate**: 34.5% | **Established baseline.** Naive LLMs frequently hallucinate line numbers and miss security flaws. |
-| **Iteration 1** | Integrated **Deterministic AST & Radon Complexity Tools** to calculate cyclomatic complexity and maintainability index. | • **Anti-Pattern Recall**: 68.4% (+26.4%)<br>• **Citation Precision**: 62.0% | **Kept.** Grounding structural analysis in Python AST eliminated vague architectural commentary. |
-| **Iteration 2** | Implemented **Autonomous Recursive Directory Walking** with dynamic sub-agents. | • **Anti-Pattern Recall**: 55.0% (-13.4%)<br>• **Runtime**: 48.2s (Too slow)<br>• **Context Drift**: High | **Removed.** Unconstrained LLM file traversal wastes tokens in `node_modules` and dilutes critical context. |
-| **Iteration 3** | Added **Live Sandboxed Runtime Agent** (`compileall` + `pytest` test suite execution). | • **Anti-Pattern Recall**: 84.2%<br>• **Runtime Execution**: Verified | **Kept.** Verifying actual compilation and test assertions caught hidden runtime regressions. |
-| **Final Solution** | Implemented **Dedicated Anti-Hallucination Verification Agent** that cross-checks all line citations and AST findings against local disk state before synthesis. | • **Anti-Pattern Recall**: **92.5%** (+50.5% over baseline)<br>• **Citation Precision**: **98.4%**<br>• **Hallucination Rate**: **0.0%**<br>• **Runtime**: **~6.0s** | **Final Architecture.** Multi-agent pipeline with deterministic tools and post-synthesis verification delivers production-grade audits. |
-
----
-
-## 💡 4. Main Failure Mode & "Hot Take"
-
-### **The Main Failure Mode Observed During Development**
-When agents are given unrestricted freedom to "wander" through a codebase using dynamic directory tool-calls, they immediately suffer from **context drift** and **attention fatigue**. In large repositories, LLMs spend 80% of their token budget reading build scripts, minified vendor bundles, or documentation while missing architectural circular dependencies and hardcoded tokens.
-
-### **Our Hot Take**
-Giving an LLM raw code and asking it to 'audit' a repository is like asking a surgeon to operate in the dark without an MRI. **Deterministic AST tooling, complexity calculation, and security regex passes must precede the LLM.** The LLM's true superpower is synthesizing structured facts and reasoning about trade-offs—not counting lines of code or parsing file trees. A rigorous post-synthesis verification loop is non-negotiable for eliminating hallucinations."
-
----
-
-## ⚡ 5. Quick Start & Execution
-
-### Prerequisites
-- Python 3.10+
-- Git
-
-### 1. Setup
-
-```bash
-# Clone the repository
-git clone <YOUR_REPO_URL>
-cd AI_Repo_Analyzer
-
-# Create and activate virtual environment
-cd backend
-python -m venv venv
-
-# Windows (PowerShell):
-.\venv\Scripts\Activate.ps1
-# macOS / Linux:
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### 2. Configure Environment
-
-Create a `.env` file inside the `backend/` directory:
-
-```env
-GOOGLE_API_KEY=your_gemini_api_key_here
-GITHUB_TOKEN=optional_personal_access_token_for_rate_limits
-```
-
-### 3. Launch Web Application
-
-```bash
-cd backend
-python server.py
-```
-
-Open **http://localhost:8000** in your browser to interact with the live dashboard.
-
-### 4. Run Empirical Benchmark Suite
-
+## 📊 Benchmark & Empirical Evaluation
+Run the automated benchmark evaluation suite:
 ```bash
 python benchmark_eval.py
 ```
+Or run the full 10-repository suite:
+```bash
+python benchmark_eval.py --full
+```
+- **Anti-Pattern Recall:** 42.0% (Baseline) ➔ **92.5% (Agent Solution)**
+- **Citation Precision:** 38.2% (Baseline) ➔ **98.4% (Agent Solution)**
+- **Hallucinated References:** 34.5% (Baseline) ➔ **0.0% (Verified Agent)**
 
 ---
 
-## 🛠️ 6. Technology Stack
-
-- **Core Orchestrator**: Asyncio Multi-Agent Pipeline (LangGraph-style sequential execution)
-- **Static Analysis**: Python `ast`, `radon` (Cyclomatic Complexity & Maintainability Index)
-- **Sandbox Execution**: Subprocess isolation, `compileall`, `pytest` test assertion runner with graceful dependency-error handling
-- **Security Scanning**: Regex-based secret detection, eval/exec auditing, SQL injection pattern matching
-- **Backend API**: FastAPI, Uvicorn, WebSockets (real-time streaming)
-- **Frontend UI**: Vanilla HTML5, CSS3 Glassmorphism Design System, JavaScript (ES6+), Mermaid.js architecture diagrams
-- **Model Layer**: Google Gemini 3.6 Flash via `google-genai` SDK
-- **Export**: One-click Markdown & JSON executive report exports
-
-
-
-## 📊 7. Features
-
-| Feature | Description |
-| :--- | :--- |
-| **Live WebSocket Streaming** | Real-time agent execution logs stream directly to the dashboard |
-| **Mermaid Architecture Diagram** | Auto-generated interactive architecture blueprint per repository |
-| **Security Vulnerability Table** | Exact file:line citations for secrets, eval/exec, and injection risks |
-| **AST & Complexity Metrics** | Radon Maintainability Index, Cyclomatic Complexity grades |
-| **Sandboxed Test Execution** | Safe pytest/unittest discovery with graceful dependency handling |
-| **Anti-Hallucination Engine** | Cross-references every claim against filesystem artifacts |
-| **Job Description Matching** | Scores repository competencies against target role requirements |
-| **Prioritized Roadmap** | P1/P2/P3 actionable remediation recommendations |
-| **History Ledger** | Sidebar audit history with one-click recall and form auto-population |
-| **Export Reports** | One-click Markdown & JSON executive report downloads |
+## 📄 License
+MIT License. Built for TrueForge Agent Harness Hackathon.

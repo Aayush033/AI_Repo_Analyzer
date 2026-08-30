@@ -1,0 +1,30 @@
+# Environment and secrets
+.env
+.env.*
+backend/.env
+*.env
+
+# Virtual environments
+venv/
+.venv/
+env/
+backend/venv/
+backend/.venv/
+
+# Git and cache
+.git
+.gitignore
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local data & run outputs
+.analyzer_history.json
+memory.json
+data/
+trajectories/
+/tmp/repo_audit_*/
+repo_audit_*/
