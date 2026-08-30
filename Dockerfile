@@ -31,5 +31,5 @@ COPY server.py ./server.py
 # Expose port
 EXPOSE 8000
 
-# Run using the root launcher (which sets up sys.path and starts uvicorn)
+# Run using the root launcher (which sets up sys.path and reads PORT dynamically)
 CMD ["python", "server.py"]

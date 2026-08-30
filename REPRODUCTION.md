@@ -1,4 +1,4 @@
-# 🔬 Reproduction Guide: RepoAuditor.ai
+# 🔬 Reproduction Guide: AI Repo Analyzer
 
 This guide provides step-by-step instructions to reproduce all evaluation results, run the baseline, execute the agentic workflow, and launch the web interface starting from a completely clean environment.
 
@@ -17,7 +17,7 @@ This guide provides step-by-step instructions to reproduce all evaluation result
 ```bash
 # 1. Clone the submission repository
 git clone <YOUR_REPO_URL>
-cd AI_Repository_Analyzer
+cd AI_Repo_Analyzer
 
 # 2. Create a clean Python virtual environment
 cd backend
@@ -132,25 +132,7 @@ bottlepy/bottle              | 42.0%            | 92.5%          | 0.0% (Verifie
 - **Security Scanning**: Regex-based secret detection, eval/exec auditing
 - **Sandbox**: Subprocess isolation, `compileall`, `pytest` with graceful dependency handling
 - **Anti-Hallucination**: Filesystem-grounded cross-verification of all claims
-
----
-
-## 📁 7. Project Structure
-
-```
-AI_Repository_Analyzer/
-├── backend/
-│   ├── agents/           # 9 specialized agent modules
-│   ├── core/             # LLM config, pipeline orchestrator, constants
-│   ├── server.py         # FastAPI + WebSocket server
-│   └── .env              # API keys
-├── static/
-│   ├── css/style.css     # Glassmorphism design system
-│   ├── js/app.js         # Frontend controller
-│   └── index.html        # Dashboard HTML
-├── benchmark_eval.py     # Empirical evaluation suite
 ├── requirements.txt      # Python dependencies
 ├── Dockerfile            # Container deployment
 ├── README.md             # Project documentation
 └── REPRODUCTION.md       # This reproduction guide
-```
