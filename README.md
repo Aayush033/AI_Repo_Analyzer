@@ -1,4 +1,4 @@
-# AI Repo Analyzer - TrueForge Edition
+# AI Repo Analyzer
 
 [![TrueForge Harness Compatible](https://img.shields.io/badge/TrueForge-Compatible-blueviolet?style=for-the-badge&logo=nvidia)](https://github.com/)
 [![Qodo Reviewed](https://img.shields.io/badge/Qodo-Agentic%20Reviewed-00C7B7?style=for-the-badge)](https://qodo.ai/)
@@ -51,24 +51,7 @@ Engineered for engineering leadership, technical recruitment, vendor codebase ta
 
 ## ⚡ Setup Steps
 
-### Option A: Running with TrueForge Agent Harness
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Aayush033/AI_Repo_Analyzer.git
-   cd AI_Repo_Analyzer
-   ```
-2. Install the TrueForge open-source harness:
-   ```bash
-   pip install trueforge-harness
-   ```
-3. Load and run the `agent.json` configuration file in TrueForge:
-   ```bash
-   trueforge run --config agent.json
-   ```
-
----
-
-### Option B: Running the Interactive Web Application & Multi-Agent Dashboard
+### Running the Interactive Web Application & Multi-Agent Dashboard
 1. **Create and activate a virtual environment:**
    ```bash
    cd backend
@@ -145,4 +128,4 @@ python benchmark_eval.py --full
 ---
 
 ## 📄 License
-MIT License. Built for TrueForge Agent Harness Hackathon.
+MIT License.
